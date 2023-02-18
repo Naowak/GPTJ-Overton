@@ -78,7 +78,7 @@ htop
 
 Retrieve files from remote
 ```
-scp -r IP-ADDRESS:/home/naowak/finetune-gpt2xl/finetuned/ ./model_trained
+scp -r IP-ADDRESS:/home/naowak/finetune-gpt/finetuned/ ./model_trained
 ```
 
 Make predictions, generate text :
