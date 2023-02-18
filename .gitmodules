@@ -1,0 +1,6 @@
+[submodule "transformers"]
+	path = transformers
+	url = https://github.com/StellaAthena/transformers
+[submodule "finetune-gpt"]
+	path = finetune-gpt
+	url = https://github.com/Naowak/finetune-gpt
