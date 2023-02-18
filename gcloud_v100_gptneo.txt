@@ -1,0 +1,48 @@
+gcloud compute instances create gpuserver \
+   --project overton-377516 \
+   --zone europe-west4-a \
+   --custom-cpu 12 \
+   --custom-memory 78 \
+   --maintenance-policy TERMINATE \
+   --image-family pytorch-1-7-cu110 \
+   --image-project deeplearning-platform-release \
+   --boot-disk-size 200GB \
+   --metadata "install-nvidia-driver=True" \
+   --accelerator="type=nvidia-tesla-v100,count=1" \
+   --preemptible
+
+
+// connect to ssh agent
+
+
+git clone https://github.com/Xirider/finetune-gpt2xl.git
+chmod -R 777 finetune-gpt2xl/
+cd finetune-gpt2xl
+
+// REMOVE WAND FROM requirements
+// ADD ==0.4.0 AFTER DEEPSPEED IN requirements
+
+pip install -r requirements.txt 
+
+// add train.txt and validate.txt to transform in .csv
+python text2csv.py 
+
+
+deepspeed --num_gpus=1 run_clm.py \
+--deepspeed ds_config_gptneo.json \
+--model_name_or_path EleutherAI/gpt-neo-2.7B \
+--train_file train.csv \
+--validation_file validation.csv \
+--do_train \
+--do_eval \
+--fp16 \
+--overwrite_cache \
+--evaluation_strategy="steps" \
+--output_dir finetuned \
+--num_train_epochs 1 \
+--eval_steps 15 \
+--gradient_accumulation_steps 2 \
+--per_device_train_batch_size 4 \
+--use_fast_tokenizer False \
+--learning_rate 5e-06 \
+--warmup_steps 10
