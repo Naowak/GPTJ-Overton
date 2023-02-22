@@ -1,7 +1,7 @@
 # GPTJ-Overton
 Codes and documentation needed to train GPTJ (or fr-boris).
 
-### Steps
+### Steps to train model
 
 Create an instance composed of 2 NVIDIA A100 40GB VRAM and 170 GB of RAM on Google Cloud Platform.  
 
@@ -85,3 +85,6 @@ Make predictions, generate text :
 ```
 python run_generate_neo.py finetuned
 ```
+
+
+### Steps to infer
