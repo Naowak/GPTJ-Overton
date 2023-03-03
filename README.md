@@ -81,10 +81,50 @@ Retrieve files from remote
 scp -r IP-ADDRESS:/home/naowak/finetune-gpt/finetuned/ ./model_trained
 ```
 
+### Steps to infer
+
+Create the VM in command line with GCP
+```
+gcloud compute instances create gpuserver \
+   --project overton-377516 \
+   --zone europe-west1-b \
+   --machine-type=custom-6-49152-ext \
+   --maintenance-policy TERMINATE \
+   --image-family pytorch-1-7-cu110 \
+   --image-project deeplearning-platform-release \
+   --boot-disk-size 100GB \
+   --accelerator="type=nvidia-tesla-t4,count=1" \
+   --metadata="install-nvidia-driver=True" \
+   --preemptible
+```
+
+Copy the model from local to remote VM
+```
+scp -r ./finetune-gpt/finetuned-model naowak@IP-ADDRESS:/home/naowak/
+```
+
+Clone the repo and its submodules
+```
+git clone --recursive git@github.com:Naowak/GPTJ-Overton.git
+```
+
+Install the requirements, and this version of transformers
+```
+cd GPTJ-Overton
+pip install -r requirements.txt
+cd transformers
+pip install .
+cd ..
+```
+
+Give all rights to all files in finetune-gpt, move model inside and go inside
+```
+chmod -R 777 finetune-gpt/
+mv finetuned-model finetune-gpt/
+cd finetune-gpt
+```
+
 Make predictions, generate text :
 ```
-python run_generate_neo.py finetuned
+python run_generate.py finetuned_model/
 ```
-
-
-### Steps to infer
