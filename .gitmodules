@@ -4,3 +4,6 @@
 [submodule "finetune-gpt"]
 	path = finetune-gpt
 	url = https://github.com/Naowak/finetune-gpt
+[submodule "finetune-gptj"]
+	path = finetune-gptj
+	url = git@github.com:Naowak/finetune-gptj.git
