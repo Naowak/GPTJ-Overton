@@ -53,7 +53,7 @@ python text2csv.py
 
 Run the training on Cedille/fr-boris model
 ```
-deepspeed --num_gpus=2 run_clm.py \
+nohup deepspeed --num_gpus=2 run_clm.py \
 --deepspeed ds_config.json \
 --model_name_or_path Cedille/fr-boris \
 --train_file train.csv \
@@ -67,7 +67,8 @@ deepspeed --num_gpus=2 run_clm.py \
 --eval_steps 200 \
 --num_train_epochs 1 \
 --gradient_accumulation_steps 2 \
---per_device_train_batch_size 16
+--per_device_train_batch_size 16 \
+> trainer.log &
 ```
 
 Monitor the training, enter those commands in two others terminal to see CPU & GPU usage
