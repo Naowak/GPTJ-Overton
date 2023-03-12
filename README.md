@@ -3,20 +3,20 @@ Codes and documentation needed to train GPTJ (or fr-boris).
 
 ### Steps to train model
 
-Create an instance composed of 2 NVIDIA A100 40GB VRAM and 170 GB of RAM on Google Cloud Platform.  
+Create an instance composed of 4 NVIDIA A100 40GB VRAM and 340 GB of RAM on Google Cloud Platform.  
 
 ```
-gcloud compute instances create gpuserver \
-   --project overton-377516 \
-   --zone asia-northeast3-b \
-   --machine-type=a2-highgpu-2g \
-   --maintenance-policy TERMINATE \
-   --image-family pytorch-1-7-cu110 \
-   --image-project deeplearning-platform-release \
-   --boot-disk-size 200GB \
-   --accelerator="type=nvidia-tesla-a100,count=2" \
-   --metadata="install-nvidia-driver=True" \
-   --preemptible
+gcloud compute instances create trainer4gpus \
+--project overton-377516 \
+--zone asia-northeast3-b \
+--machine-type=a2-highgpu-4g \
+--maintenance-policy TERMINATE \
+--image-family pytorch-1-7-cu110 \
+--image-project deeplearning-platform-release \
+--boot-disk-size 200GB \
+--accelerator="type=nvidia-tesla-a100,count=4" \
+--metadata="install-nvidia-driver=True" \
+--preemptible
 ```
 
 If you pre-configured you account on GCP, you can connect with ssh to the VM  
@@ -53,11 +53,11 @@ python text2csv.py
 
 Run the training on Cedille/fr-boris model
 ```
-nohup deepspeed --num_gpus=2 run_clm.py \
+nohup deepspeed --num_gpus=4 run_clm.py \
 --deepspeed ds_config.json \
---model_name_or_path Cedille/fr-boris \
---train_file train.csv \
---validation_file validation.csv \
+--model_name_or_path overton-20percent/ \
+--train_file train.txt \
+--validation_file validation.txt \
 --do_train \
 --do_eval \
 --fp16 \
@@ -66,7 +66,7 @@ nohup deepspeed --num_gpus=2 run_clm.py \
 --output_dir finetuned \
 --eval_steps 200 \
 --num_train_epochs 1 \
---gradient_accumulation_steps 2 \
+--gradient_accumulation_steps 4 \
 --per_device_train_batch_size 16 \
 > trainer.log &
 ```
