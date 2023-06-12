@@ -129,3 +129,6 @@ Make predictions, generate text :
 ```
 python run_generate.py finetuned_model/
 ```
+
+## License
+This project is licensed under the MIT License with an Acknowledgment Clause. See LICENSE for more information.
